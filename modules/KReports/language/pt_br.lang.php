@@ -15,7 +15,7 @@
  ********************************************************************************/
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
-$mod_strings['LBL_SAVE_BUTTON_LABEL'] = 'gravar';
+$mod_strings['LBL_SAVE_BUTTON_LABEL'] = 'Pré-visualizar';
 $mod_strings['LBL_CANCEL_BUTTON_LABEL'] = 'cancelar';
 $mod_strings['LBL_REPORT_NAME_LABEL'] = 'Nome do relatório: &nbsp;';
 $mod_strings['LBL_ASSIGNED_USER_LABEL'] = 'Usuário atribuído:&nbsp;';

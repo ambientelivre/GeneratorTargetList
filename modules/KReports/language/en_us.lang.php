@@ -13,7 +13,7 @@
 if (!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 $mod_strings = array(
-    'LBL_SAVE_BUTTON_LABEL' => 'Save',
+    'LBL_SAVE_BUTTON_LABEL' => 'Preview',
     'LBL_CANCEL_BUTTON_LABEL' => 'Cancel',
     'LBL_REPORT_NAME_LABEL' => 'Name',
     'LBL_LOADMASK' => '... loading data ...',
