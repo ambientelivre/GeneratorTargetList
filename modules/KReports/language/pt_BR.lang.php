@@ -15,6 +15,9 @@
  ********************************************************************************/
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
+$mod_strings['LBL_TARGETLISTEXPORTPOPUP_TITLE'] = 'Exportar para TargetList';
+$mod_strings['LBL_QUERYREFERENCE'] = 'Referência';
+
 $mod_strings['LBL_SAVE_BUTTON_LABEL'] = 'Pré-visualizar';
 $mod_strings['LBL_CANCEL_BUTTON_LABEL'] = 'cancelar';
 $mod_strings['LBL_REPORT_NAME_LABEL'] = 'Nome do relatório: &nbsp;';
@@ -99,7 +102,7 @@ $mod_strings['LBL_VALUETYPE'] = 'Tipo do valor';
 $mod_strings['LBL_DISPLAYFUNCTION'] = 'mostrar. Func.';
 $mod_strings['LBL_USEREDITABLE'] = 'permite editar';
 $mod_strings['LBL_DASHLETEDITABLE'] = 'Dashlet Option';
-$mod_strings['LBL_QUERYCONTEXT'] = 'Context';
+$mod_strings['LBL_QUERYCONTEXT'] = 'Contexto';
 $mod_strings['LBL_UEOPTION_YES'] = 'yes';
 $mod_strings['LBL_UEOPTION_NO'] = 'no';
 $mod_strings['LBL_UEOPTION_YFO'] = 'value only';
@@ -260,7 +263,7 @@ $mod_strings['LBL_CHART_LABEL'] = 'Gráfico';
 $mod_strings['LBL_CHART_HEIGHT_LABEL'] = 'Altura do gráfico';
 $mod_strings['LBL_CV_CHARTTYPE'] = 'Tipo de gráfico';
 $mod_strings['LBL_CV_TITLE'] = 'Título';
-$mod_strings['LBL_CV_CONTEXT'] = 'Context';
+$mod_strings['LBL_CV_CONTEXT'] = 'Contexto';
 $mod_strings['LBL_CV_DIMENSION'] = 'Dimensão';
 $mod_strings['LBL_CV_COLORSCHEMA'] = 'Tema';
 $mod_strings['LBL_CV_CHARTSTYLE'] = 'Style';

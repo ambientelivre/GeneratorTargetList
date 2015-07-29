@@ -49,6 +49,7 @@ Ext.onReady(function() {
             region: 'center',
             frame: false,
             activeTab: 1,
+            // mostra somente a aba de 'Critério de seleção', escondendo as outras
             items: [K.kreports.vboxWhere /* , {
                 layout: 'fit',
                 title: bi('LBL_LISTFIELDS'),

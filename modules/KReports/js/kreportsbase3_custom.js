@@ -623,7 +623,8 @@ K.kreports.vboxWhere = new Ext.Panel({
         align: "stretch",
         pack: "start"
     },
-    items: [ by, bH ]
+    // 'by' é o painel de seleção de grupos, com a pasta 'root'
+    items: [ /*by,*/ bH ]
 });
 
 Ext.namespace("K.kreports.mainListGrid");
@@ -2320,7 +2321,7 @@ K.kreports.mainEditToolbar.Toolbar = new Ext.Toolbar({
             a.submit();
         },
         disabled: false
-    }, "-", K.kreports.mainEditToolbar.reportname, {
+    }/*, "-", K.kreports.mainEditToolbar.reportname, {
         xtype: "button",
         icon: "modules/KReports/images/longtext.png",
         handler: function() {
@@ -2349,7 +2350,7 @@ K.kreports.mainEditToolbar.Toolbar = new Ext.Toolbar({
         handler: function() {
             K.kreports.reportOptions.dialog.show();
         }
-    }, "->", {
+    }*/, "->", {
         xtype: "tbtext",
         text: K.kreports.decode64(K.kreports.M),
         style: {

@@ -52,6 +52,7 @@
 <script type='text/javascript' src='modules/KReports/js/kreportsbase1{if $kreportDebug}_debug{/if}.js'></script>
 <script type="text/javascript" src="modules/KReports/js/kreportsbase2{if $kreportDebug}_debug{/if}.js"></script>
 
+<!-- Condicional para diferenciar layout de Admin para Usuário comum -->
 {if is_admin($current_user)}
 <script type="text/javascript" src="modules/KReports/js/kreportsbase3{if $kreportDebug}_debug{/if}.js"></script>
 {$pluginJS}{$pluginData}
