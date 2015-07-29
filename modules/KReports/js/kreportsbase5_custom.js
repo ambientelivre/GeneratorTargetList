@@ -29,7 +29,7 @@ Ext.onReady(function() {
                 align: 'stretch',
                 pack: 'center'
             },
-            items: [/*new Ext.panel.Panel({
+            items: [new Ext.panel.Panel({
                 title: bi('LBL_MODULES'),
                 width: 200,
                 flex: 1,
@@ -41,7 +41,7 @@ Ext.onReady(function() {
                     activeOnTop: true
                 },
                 items: [mainModuleTreePanel, K.kreports.unionTree.unionTreePanel]
-            }),*/ FieldsListingEditorGrid]
+            }), FieldsListingEditorGrid]
         }), new Ext.tab.Panel({
             width: 600,
             flex: 1,
@@ -49,12 +49,12 @@ Ext.onReady(function() {
             region: 'center',
             frame: false,
             activeTab: 1,
-            items: [K.kreports.vboxWhere/*, {
+            items: [K.kreports.vboxWhere, {
                 layout: 'fit',
                 title: bi('LBL_LISTFIELDS'),
                 icon: 'modules/KReports/images/manipulation.png',
                 items: [K.kreports.mainListGrid.listGrid, K.kreports.unionList.unionListGrid]
-            }, K.kreports.presentationpanel.mainpanel, K.kreports.visualizationpanel.mainpanel, K.kreports.integrationpanel.mainpanel*/]
+            }/*, K.kreports.presentationpanel.mainpanel, K.kreports.visualizationpanel.mainpanel, K.kreports.integrationpanel.mainpanel*/]
         })]
     });
     K.kreports.unionTree.bK();

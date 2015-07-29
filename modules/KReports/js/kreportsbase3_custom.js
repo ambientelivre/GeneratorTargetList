@@ -1564,7 +1564,7 @@ K.kreports.EditViewModuletree.modulesCombo = new Ext.form.ComboBox({
             K.kreports.EditViewModuletree.modulesCombo.fireEvent("select");            
         }
         // Seta por padrão o módulo Contacts
-        K.kreports.EditViewModuletree.modulesTreeStore.setInitialRootNode('Contacts');
+        //K.kreports.EditViewModuletree.modulesTreeStore.setInitialRootNode('Contacts');
     }
 });
 
