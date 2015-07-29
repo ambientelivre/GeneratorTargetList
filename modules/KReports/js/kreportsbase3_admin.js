@@ -1563,8 +1563,6 @@ K.kreports.EditViewModuletree.modulesCombo = new Ext.form.ComboBox({
             K.kreports.EditViewModuletree.modulesCombo.setValue(Ext.get("report_module").dom.value);
             K.kreports.EditViewModuletree.modulesCombo.fireEvent("select");            
         }
-        // Seta por padrão o módulo Contacts
-        K.kreports.EditViewModuletree.modulesTreeStore.setInitialRootNode('Contacts');
     }
 });
 
@@ -2292,21 +2290,6 @@ K.kreports.mainEditToolbar.Toolbar = new Ext.Toolbar({
             var a = document.getElementById("EditView");
             a.action.value = "Save";
             a.submit();
-        },
-        disabled: false
-    }, {
-        xtype: "button",
-        text: bi("LBL_TARGETLISTEXPORTPOPUP_TITLE"),
-        icon: "modules/KReports/images/targetlist.png",
-        handler: function() {
-            /*K.kreports.presentationpanel.mainpanel.savePanel();
-            K.kreports.visualizationpanel.mainpanel.savePanel();
-            K.kreports.integrationpanel.mainpanel.savePanel();
-            listGridStore.writeJson();
-            var a = document.getElementById("EditView");
-            a.action.value = "Save";            
-            a.submit();*/
-            ktargetlistexport();
         },
         disabled: false
     }, {
