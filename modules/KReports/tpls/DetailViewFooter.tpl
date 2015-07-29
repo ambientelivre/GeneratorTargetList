@@ -37,7 +37,12 @@
 {*$addViewJS*}
 {*$viewJS*}
 
+<!-- Condicional para diferenciar layout de Admin para Usuário comum -->
+{if is_admin($current_user)}
 <script type="text/javascript" src="modules/KReports/js/kreportsbase4{if $kreportDebug}_debug{/if}.js"></script> 
+{else} 
+<script type="text/javascript" src="modules/KReports/js/kreportsbase4_custom.js"></script> 
+{/if}    
 
 <div id='reportMain' style="margin-left:0px; margin-right:10px">
 <div id='toolbarArea'></div>

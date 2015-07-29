@@ -240,7 +240,7 @@ Ext.onReady(function() {
             },
             id: "KReportsEditReportButton",
             disabled: accessLevel > 0 ? false : true
-        }, {
+        }/*, {
             text: bi("LBL_DUPLICATE_REPORT_BUTTON_LABEL"),
             id: "KReportsDuplicateReportButton",
             icon: "modules/KReports/images/copy.png",
@@ -273,7 +273,7 @@ Ext.onReady(function() {
             },
             id: "KReportsDeleteReportButton",
             disabled: accessLevel > 1 ? false : true
-        }, "-", {
+        }*/, "-", {
             text: bi("LBL_EXPORTMENU_BUTTON_LABEL"),
             icon: "modules/KReports/images/export.png",
             menu: {
