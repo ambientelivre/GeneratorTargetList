@@ -53,13 +53,13 @@
 <script type="text/javascript" src="modules/KReports/js/kreportsbase2{if $kreportDebug}_debug{/if}.js"></script>
 
 {if is_admin($current_user)}
-<script type="text/javascript" src="modules/KReports/js/kreportsbase3_admin.js"></script>
-{$pluginJS}{$pluginData}
-<script type="text/javascript" src="modules/KReports/js/kreportsbase5_admin.js"></script>
-{else}    
 <script type="text/javascript" src="modules/KReports/js/kreportsbase3{if $kreportDebug}_debug{/if}.js"></script>
 {$pluginJS}{$pluginData}
 <script type="text/javascript" src="modules/KReports/js/kreportsbase5{if $kreportDebug}_debug{/if}.js"></script>
+{else}    
+<script type="text/javascript" src="modules/KReports/js/kreportsbase3_custom.js"></script>
+{$pluginJS}{$pluginData}
+<script type="text/javascript" src="modules/KReports/js/kreportsbase5_custom.js"></script>
 {/if}
     
 
