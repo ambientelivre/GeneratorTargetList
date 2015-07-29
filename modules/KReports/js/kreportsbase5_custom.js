@@ -49,12 +49,12 @@ Ext.onReady(function() {
             region: 'center',
             frame: false,
             activeTab: 1,
-            items: [K.kreports.vboxWhere, {
+            items: [K.kreports.vboxWhere /* , {
                 layout: 'fit',
                 title: bi('LBL_LISTFIELDS'),
                 icon: 'modules/KReports/images/manipulation.png',
                 items: [K.kreports.mainListGrid.listGrid, K.kreports.unionList.unionListGrid]
-            }/*, K.kreports.presentationpanel.mainpanel, K.kreports.visualizationpanel.mainpanel, K.kreports.integrationpanel.mainpanel*/]
+            }, K.kreports.presentationpanel.mainpanel, K.kreports.visualizationpanel.mainpanel, K.kreports.integrationpanel.mainpanel*/]
         })]
     });
     K.kreports.unionTree.bK();
