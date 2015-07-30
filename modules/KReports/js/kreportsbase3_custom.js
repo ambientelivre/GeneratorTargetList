@@ -356,14 +356,14 @@ K.kreports.EditViewWhereclause.bf = [ {
     width: 150,
     sortable: true,
     hidden: true
-}, {
+}/*, {
     id: "sequence",
     text: bi("LBL_SEQUENCE"),
     dataIndex: "sequence",
     sortable: true,
     editor: new Ext.form.TextField(),
     width: 30
-}, {
+}*/, {
     id: "exportpdf",
     text: bi("LBL_EXPORTPDF"),
     dataIndex: "exportpdf",
@@ -433,7 +433,7 @@ K.kreports.EditViewWhereclause.bf = [ {
     hidden: false,
     width: 100,
     editor: new Ext.form.TextField()
-}, {
+}/*, { Oculta campos 'Sequência', 'Obrigatório', 'Permitir Edição', 'Contexto'
     text: bi("LBL_JOIN_TYPE"),
     readOnly: true,
     dataIndex: "jointype",
@@ -478,7 +478,7 @@ K.kreports.EditViewWhereclause.bf = [ {
         displayField: "text",
         valueField: "value"
     })
-}, {
+}*/, {
     text: bi("LBL_DASHLETEDITABLE"),
     readOnly: true,
     hidden: true,
@@ -501,7 +501,7 @@ K.kreports.EditViewWhereclause.bf = [ {
         displayField: "text",
         valueField: "value"
     })
-}, {
+}/*, {
     id: "context",
     text: bi("LBL_QUERYCONTEXT"),
     dataIndex: "context",
@@ -509,7 +509,7 @@ K.kreports.EditViewWhereclause.bf = [ {
     hidden: false,
     width: 150,
     editor: new Ext.form.TextField()
-}, {
+}*/, {
     id: "reference",
     text: bi("LBL_QUERYREFERENCE"),
     dataIndex: "reference",
