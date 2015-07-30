@@ -21,3 +21,8 @@ Author: Ramon Marcondes
 * Condição para admin ou usuario regular:
 - <b>modules/KReports/tpls/EditViewFooter.tpl</b>
 - <b>modules/KReports/tpls/DetailViewFooter.tpl</b>
+
+* Para remover texto de versão e ícones sociais:
+- Nos javascripts 'kreportsbase', procure por items que contenham o texto:
+K.kreports.decode64(K.kreports.M)
+K.kreports.decode64(K.kreports.H)

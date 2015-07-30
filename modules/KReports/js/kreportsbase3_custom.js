@@ -2350,7 +2350,7 @@ K.kreports.mainEditToolbar.Toolbar = new Ext.Toolbar({
         handler: function() {
             K.kreports.reportOptions.dialog.show();
         }
-    }*/, "->", {
+    }, "->", {
         xtype: "tbtext",
         text: K.kreports.decode64(K.kreports.M),
         style: {
@@ -2364,7 +2364,7 @@ K.kreports.mainEditToolbar.Toolbar = new Ext.Toolbar({
         style: {
             "margin-right": "5px"
         }
-    } ]
+    }*/ ]
 });
 
 Ext.namespace("K.kreports.presentationpanel");

@@ -287,7 +287,7 @@ Ext.onReady(function() {
                 items: kintegrationpluginsarray["tool"]
             },
             disabled: 0 == kintegrationpluginsarray["tool"].length ? true : false
-        }, "->", {
+        }/*, "->", {
             xtype: "tbtext",
             text: K.kreports.decode64(K.kreports.M),
             style: {
@@ -300,7 +300,7 @@ Ext.onReady(function() {
             style: {
                 "margin-right": "5px"
             }
-        }) ]
+        })*/ ]
     });
     Ext.getCmp("kReporterPresentation").renderPresentation();
     if (Ext.getCmp("kReporterPresentation").loadPresentation) Ext.getCmp("kReporterPresentation").loadPresentation(K.kreports.DetailView.ae());
