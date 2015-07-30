@@ -16,7 +16,7 @@
 if (!defined('sugarEntry') || !sugarEntry) die('Não é um ponto de entrada válido');
 
 $mod_strings = array(
-    'LBL_SAVE_BUTTON_LABEL' => 'Pré-vizualiar',
+    'LBL_SAVE_BUTTON_LABEL' => 'Pré-visualizar',
     'LBL_CANCEL_BUTTON_LABEL' => 'Cancelar',
     'LBL_REPORT_NAME_LABEL' => 'Nome',
     'LBL_LOADMASK' => '... carregando dados ...',
