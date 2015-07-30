@@ -509,7 +509,7 @@ K.kreports.EditViewWhereclause.bf = [ {
     hidden: false,
     width: 150,
     editor: new Ext.form.TextField()
-}*/, {
+}, {
     id: "reference",
     text: bi("LBL_QUERYREFERENCE"),
     dataIndex: "reference",
@@ -517,7 +517,7 @@ K.kreports.EditViewWhereclause.bf = [ {
     hidden: false,
     width: 150,
     editor: new Ext.form.TextField()
-}, {
+}*/, {
     text: bi("LBL_CUSTOMSQLFUNCTION"),
     readOnly: true,
     dataIndex: "customsqlfunction",

@@ -280,14 +280,14 @@ Ext.onReady(function() {
                 items: kintegrationpluginsarray["export"]
             },
             disabled: 0 == kintegrationpluginsarray["export"].length ? true : false
-        }, "-", {
+        }/*, "-", {
             text: bi("LBL_TOOLSMENU_BUTTON_LABEL"),
             icon: "modules/KReports/images/tools.png",
             menu: {
                 items: kintegrationpluginsarray["tool"]
             },
             disabled: 0 == kintegrationpluginsarray["tool"].length ? true : false
-        }/*, "->", {
+        }, "->", {
             xtype: "tbtext",
             text: K.kreports.decode64(K.kreports.M),
             style: {
