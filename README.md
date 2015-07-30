@@ -6,12 +6,18 @@ Features:
 
 Author: Ramon Marcondes
 
-Caminhos para customização no Sugar:
-- Painel de seleção agrupado: modules/KReports/js/kreportsbase3_custom.js
-- Painel de pré-visualização: modules/KReports/js/kreportsbase4_custom.js
-- Painéis do layout de consulta com seleção de campos: modules/KReports/js/kreportsbase5_custom.js
+* Caminhos para customização no Sugar:
+- Painel de seleção agrupado: <b>modules/KReports/js/kreportsbase3_custom.js</b>
+- Painel de pré-visualização: <b>modules/KReports/js/kreportsbase4_custom.js</b>
+- Painéis do layout de consulta com seleção de campos: <b>modules/KReports/js/kreportsbase5_custom.js</b>
+- Método para exportar target list: <b>modules/KReports/Plugins/Integration/ktargetlistexport/ktargetlistexport.js</b>
 
-- Método para exportar target list: modules/KReports/Plugins/Integration/ktargetlistexport/ktargetlistexport.js
-- Tradução : modules/KReports/language/pt_BR.lang.php
-- Condição para admin ou usuario regular - modules/KReports/tpls/EditViewFooter.tpl
-					 - modules/KReports/tpls/DetailViewFooter.tpl
+* Traduções :
+- Geral: <b>modules/KReports/language/pt_BR.lang.php</b>
+- Preview - paginação: <b>custom/k/extjs4/ext-all.js</b>
+- Preview - resultados: <b>modules/KReports/Plugins/Presentation/standardview/js/viewstandard.js</b>
+- Preview - outros: <b>custom/k/extjs4/ux/SlidingPager.js</b>
+
+* Condição para admin ou usuario regular:
+- <b>modules/KReports/tpls/EditViewFooter.tpl</b>
+- <b>modules/KReports/tpls/DetailViewFooter.tpl</b>
