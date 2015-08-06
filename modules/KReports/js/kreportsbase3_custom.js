@@ -624,7 +624,7 @@ K.kreports.vboxWhere = new Ext.Panel({
         pack: "start"
     },
     // 'by' é o painel de seleção de grupos, com a pasta 'root'
-    items: [ /*by,*/ bH ]
+    items: [ by, bH ]
 });
 
 Ext.namespace("K.kreports.mainListGrid");
