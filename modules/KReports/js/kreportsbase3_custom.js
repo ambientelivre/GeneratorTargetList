@@ -33,7 +33,7 @@ K.kreports.EditViewWhereclause.A = new K.kreports.kreportsJsonStore({
 
 K.kreports.EditViewWhereclause.bV = new Ext.data.TreeStore({
     root: {
-        text: "root",
+        text: "raiz",
         selected: true,
         leaf: false,
         draggable: false,
@@ -170,7 +170,7 @@ var aP = new Ext.Button({
 });
 
 var aT = new Ext.form.ComboBox({
-    store: [ "AND", "OR" ],
+    store: [ "E", "OU" ],
     name: "group Clause",
     typeAhead: true,
     editable: false,
@@ -178,7 +178,7 @@ var aT = new Ext.form.ComboBox({
     triggerAction: "all",
     emptyText: "Select a type.",
     selectOnFocus: true,
-    value: "AND",
+    value: "E",
     width: 50,
     listeners: {
         select: function() {
