@@ -484,6 +484,9 @@ class KReport extends SugarBean {
       $this->kQueryArray = new KReportQueryArray($this->report_module, $this->union_modules, $evalSQLFunctions, $arrayList, $arrayUnionList, $arrayWhere, $additionalFilter, $arrayWhereGroups, $additionalGroupBy, $paramsArray);
       $sqlString = $this->kQueryArray->build_query_strings();
       $this->fieldNameMap = $this->kQueryArray->fieldNameMap;
+      
+      /* Guarda o sql do relatório na Session */
+      $_SESSION['kreport_sql'] = $sqlString;
       return $sqlString;
 
       // return array('select' => $this->kQueryArray->selectString, 'from' => $this->kQueryArray->fromString, 'where' => $this->kQueryArray->whereString ,'fields' => '', 'groupby' => $this->kQueryArray->groupbyString, 'having' => $this->kQueryArray->havingString , 'orderby' => $this->kQueryArray->orderbyString);
@@ -994,7 +997,19 @@ class KReport extends SugarBean {
          $newProspectList->name = $listname;
          $newProspectList->list_type = 'default';
          $newProspectList->assigned_user_id = $current_user->id;
-         $newProspectList->save();
+                  
+         if ($newProspectList->save()) {
+            /* Força update do campo da base de dados com o sql do relatório */ 
+            $db = DBManagerFactory::getInstance();
+            $sql = 'UPDATE prospect_lists SET sql_query = "'.str_replace('"', "'", $_SESSION['kreport_sql']).'" where id = "'.$newProspectList->id.'"';
+            $result = $db->query($sql);
+            if ($result) {
+                $GLOBALS['log']->debug("Atualizou prospect list sql");
+            } else {
+                $GLOBALS['log']->debug("Falha ao atualizar prospect list sql");
+            }
+            /* Fim */
+         }
 
          // add to campaign
          if ($campaign_id != '') {
