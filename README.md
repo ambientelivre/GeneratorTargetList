@@ -6,6 +6,8 @@ Features:
 
 Author: Ramon Marcondes
 
+* Criar campo para salvar sql dos relatórios: 'sql_query', na tabela 'prospect_lists' (a lógica para salvar está em modules/KReports/KReport.php)
+
 * Caminhos para customização no Sugar:
 - Painel de seleção agrupado: <b>modules/KReports/js/kreportsbase3_custom.js</b>
 - Painel de pré-visualização: <b>modules/KReports/js/kreportsbase4_custom.js</b>
