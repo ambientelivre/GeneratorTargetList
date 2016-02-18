@@ -998,9 +998,25 @@ class KReport extends SugarBean {
          $newProspectList->list_type = 'default';
          $newProspectList->assigned_user_id = $current_user->id;
                   
+         $db = DBManagerFactory::getInstance();
+         /*
+         $sugarQuery = new SugarQuery();
+         $sugarQuery->select('id');
+         $sugarQuery->from(BeanFactory::getBean('Accounts'));
+         $sugarQuery->where()->equals('name',$newProspectList->name);
+         $id_prospect = $sugarQuery->execute();
+         $id_prospect = $id_prospect[0];         
+         */
+         
+         $sql = "SELECT id, name from prospect_lists where deleted = '0' and name = '".$newProspectList->name."' limit 1";
+         $result = $db->query($sql);
+         if ($db->getRowCount($result) > 0) {
+             if ($row = $db->fetchByAssoc($result)) {
+                $newProspectList->id = $row['id']; 
+             }             
+         }
          if ($newProspectList->save()) {
-            /* Força update do campo da base de dados com o sql do relatório */ 
-            $db = DBManagerFactory::getInstance();
+            /* Força update do campo da base de dados com o sql do relatório */             
             $sql = 'UPDATE prospect_lists SET sql_query = "'.str_replace('"', "'", $_SESSION['kreport_sql']).'" where id = "'.$newProspectList->id.'"';
             $result = $db->query($sql);
             if ($result) {
