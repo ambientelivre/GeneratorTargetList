@@ -487,6 +487,7 @@ class KReport extends SugarBean {
       
       /* Guarda o sql do relatório na Session */
       $_SESSION['kreport_sql'] = $sqlString;
+      echo $sqlString;
       return $sqlString;
 
       // return array('select' => $this->kQueryArray->selectString, 'from' => $this->kQueryArray->fromString, 'where' => $this->kQueryArray->whereString ,'fields' => '', 'groupby' => $this->kQueryArray->groupbyString, 'having' => $this->kQueryArray->havingString , 'orderby' => $this->kQueryArray->orderbyString);
@@ -1017,7 +1018,10 @@ class KReport extends SugarBean {
          }
          if ($newProspectList->save()) {
             /* Força update do campo da base de dados com o sql do relatório */             
-            $sql = 'UPDATE prospect_lists SET sql_query = "'.str_replace('"', "'", $_SESSION['kreport_sql']).'" where id = "'.$newProspectList->id.'"';
+            $sql = 'UPDATE prospect_lists SET sql_query = "'
+                    // A query vem com aspas misturadas, o replace padroniza todas para aspas simples
+                    .str_replace('"', "'", $_SESSION['kreport_sql'])
+                    .'" where id = "'.$newProspectList->id.'"';
             $result = $db->query($sql);
             if ($result) {
                 $GLOBALS['log']->debug("Atualizou prospect list sql");
@@ -1173,7 +1177,7 @@ class KReport extends SugarBean {
       $queryResults = $db->query($query);
 
       if ($_REQUEST['kreportdebugquery'] == true)
-         echo $query;
+         //echo $query;
 
       // 2011-02-03 added for percentage calculation of total
       //see if we need to query the totals

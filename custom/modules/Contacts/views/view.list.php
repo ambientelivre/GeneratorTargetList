@@ -4,23 +4,18 @@ require_once('include/MVC/View/views/view.list.php');
 class ContactsViewList extends ViewList {
 
     function listViewProcess() {
-        $this->processSearchForm();
+        //echo $_SESSION['Contacts2_QUERY'];
         
-        // Percorrendo arrays até chegar ao array dos campos
-        //print_r($this->searchForm->searchFields);
-        //$name = $this->searchForm->searchFields['search_name']['value'];
-        //$current_user_only = $this->searchForm->searchFields['$current_user_only']['value'];
+        $this->processSearchForm();
         
         // Condição padrão de pesquisa,
         $test = false;
-        foreach ($this->searchForm->searchFields as $field) {         
-            //echo 'Campo: '.$field['value'];   
+        foreach ($this->searchForm->searchFields as $field) {  
             if (!empty($field['value'])) {
                 $test = true;
             }
         }
         if (!$test) {
-        //if (empty($name)) {
             $this->params['custom_where'] = " limit 0";
         }
                
