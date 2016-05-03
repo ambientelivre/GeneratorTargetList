@@ -300,6 +300,7 @@ class KReport extends SugarBean {
    var $fieldNameMap;
    // the query Array
    var $kQueryArray;
+   var $kQueryArrayAux; // Clone
    //2011-02-03 for the total values
    var $totalResult = '';
    // 2011-03-29 array for the formula evaluation
@@ -481,15 +482,25 @@ class KReport extends SugarBean {
          $paramsArray['limit'] = $parameters['limit'];
       }
 
+      // Query original, deixe estar como está
+      // $_SESSION['query_aux'] com valor 0 faz o procedimento normal
+      $_SESSION['query_aux'] = 0;
       $this->kQueryArray = new KReportQueryArray($this->report_module, $this->union_modules, $evalSQLFunctions, $arrayList, $arrayUnionList, $arrayWhere, $additionalFilter, $arrayWhereGroups, $additionalGroupBy, $paramsArray);
       $sqlString = $this->kQueryArray->build_query_strings();
       $this->fieldNameMap = $this->kQueryArray->fieldNameMap;
+      echo 'QueryString: '.$sqlString;
       
-      /* Guarda o sql do relatório na Session */
-      $_SESSION['kreport_sql'] = $sqlString;
-      echo $sqlString;
+      // $_SESSION['query_aux'] com valor 1 faz o procedimento customizado
+      // com substituição de variáveis
+      $_SESSION['query_aux'] = 1;
+      $this->kQueryArrayAux = new KReportQueryArray($this->report_module, $this->union_modules, $evalSQLFunctions, $arrayList, $arrayUnionList, $arrayWhere, $additionalFilter, $arrayWhereGroups, $additionalGroupBy, $paramsArray);
+      $sqlStringAux = $this->kQueryArrayAux->build_query_strings();
+      //$this->fieldNameMap = $this->kQueryArray->fieldNameMap;
+      //Guarda o sql do relatório na Session      
+      $_SESSION['kreport_sql'] = $sqlStringAux;
+      echo 'QueryStringAux: '.$sqlStringAux;
+      
       return $sqlString;
-
       // return array('select' => $this->kQueryArray->selectString, 'from' => $this->kQueryArray->fromString, 'where' => $this->kQueryArray->whereString ,'fields' => '', 'groupby' => $this->kQueryArray->groupbyString, 'having' => $this->kQueryArray->havingString , 'orderby' => $this->kQueryArray->orderbyString);
    }
 
@@ -504,13 +515,14 @@ class KReport extends SugarBean {
       $arrayWhere = json_decode_kinamu(html_entity_decode($this->whereconditions, ENT_QUOTES, 'UTF-8'));
       $arrayList = json_decode_kinamu(html_entity_decode($this->listfields, ENT_QUOTES, 'UTF-8'));
       $arrayWhereGroups = json_decode_kinamu(html_entity_decode($this->wheregroups, ENT_QUOTES, 'UTF-8'));
-
-      $kQuery = new KReportQuery($this->report_module, $this->evalSQLFunctions, $arrayList, $arrayWhere, $arrayWhereGroups);
+      
+      $kQuery = new KReportQuery($this->report_module, $this->evalSQLFunctions, $arrayList, $arrayWhere, $arrayWhereGroups, 1);
+      // $kQuery = new KReportQuery($this->report_module, $this->evalSQLFunctions, $arrayList, $arrayWhere, $arrayWhereGroups, 1);
 
       $kQuery->build_query_strings();
       $this->fieldNameMap = $kQuery->fieldNameMap;
 
-      return array('select' => $kQuery->selectString, 'from' => $kQuery->fromString, 'where' => $kQuery->whereString, 'fields' => '', 'groupby' => $kQuery->groupbyString, 'orderby' => $kQuery->orderbyString);
+      return array('select' => $kQuery->selectString, 'from' => $kQuery->fromString, 'where' => $kQuery->whereString, 'fields' => '', 'groupby' => $kQuery->groupbyString, 'orderby' => $kQuery->orderbyString);      
    }
 
    // 2010-12-18 added function for formatting based on FieldType
