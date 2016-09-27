@@ -1612,7 +1612,7 @@ class KReportQuery {
             break;
       }
       
-      echo '<br><br>Operador: '.$operator.'<br>';
+      //echo '<br><br>Operador: '.$operator.'<br>';
       
       // Aqui separamos a query normal da com variáveis
         if ($_SESSION['query_aux'] == 0) {   // O primeiro é o original
@@ -2007,10 +2007,10 @@ class KReportQuery {
                        $thisWhereString .= ' OR ' . $this->get_field_name($path, $fieldname, $fieldid);
                        $thisWhereString .= ' = \'' . $value . '\'';
                        break;
-                    //case 'date':
-                    //case 'datetime':
-                        //$thisWhereString .= ' = \'' . '$equals' . '\'';
-                    //break;
+                    case 'date':
+                    case 'datetime':
+                        $thisWhereString .= ' = DATE_FORMAT(\'$equals\', \'%d-%m-%Y %h:%i:%s\')';
+                    break;
                     default:
                        $thisWhereString .= ' = \'' . $value . '\'';
                        break;
@@ -2020,10 +2020,17 @@ class KReportQuery {
                  $thisWhereString .= ' = \'' . $value . '\'';
               break;
            case 'soundslike':
-              $thisWhereString .= ' SOUNDS LIKE \'' . $value . '\'';
+               switch ($this->fieldNameMap[$fieldid]['type']) {
+                case 'date':
+                case 'datetime':
+                    $thisWhereString .= ' SOUNDS LIKE \' DATE_FORMAT(\'$soundslike\', \'%d-%m-%Y %h:%i:%s\')';  
+                default:
+                    $thisWhereString .= ' SOUNDS LIKE \'$soundslike\'';
+                    break;
+               }
               break;
            case 'notequal':
-              $thisWhereString .= ' <> \'' . '$notequal' . '\'';
+              $thisWhereString .= ' <> \'$notequal\'';
               break;
            case 'greater':
               $thisWhereString .= ' > \'' . $value . '\'';
@@ -2032,47 +2039,42 @@ class KReportQuery {
               // bug 2011-03-10 .. fixed date handling
               // bug 2011-03-25 date no handled in client
               // $thisWhereString .= ' > \'' . $GLOBALS['timedate']->to_db_date($value, false) . '\'';
-              $thisWhereString .= ' > \'' . '$after' . '\'';
+              $thisWhereString .= ' > \'$after\'';
               break;
            case 'less':
-              $thisWhereString .= ' < \'' . $value . '\'';
+              $thisWhereString .= ' < \'$less\'';
               break;
            case 'before':
               // bug 2011-03-10 .. fixed date handling
               // bug 2011-03-25 date no handled in client
               // $thisWhereString .= ' < \'' . $GLOBALS['timedate']->to_db_date($value, false) . '\'';
-              $thisWhereString .= ' < \'' . '$before' . '\'';
+              $thisWhereString .= ' < \'$before\'';
               break;
            case 'greaterequal':
-              $thisWhereString .= ' >= \'' . $value . '\'';
+              $thisWhereString .= ' > \'' . $value . '\'';
               break;
            case 'lessequal':
-              $thisWhereString .= ' <= \'' . $value . '\'';
+              $thisWhereString .= ' > \'' . $value . '\'';
               break;
            case 'starts':
-              $thisWhereString .= ' LIKE \'' . $value . '%\'';
+              $thisWhereString .= ' LIKE \'$starts%\'';
               break;
            case 'notstarts':
-              $thisWhereString .= ' NOT LIKE \'' . $value . '%\'';
+              $thisWhereString .= ' NOT LIKE \'$notstarts%\'';
               break;
            case 'contains':
-              $thisWhereString .= ' LIKE \'%' . $value . '%\'';
+              $thisWhereString .= ' LIKE \'%$contains%\'';
               break;
            case 'notcontains':
-              $thisWhereString .= ' NOT LIKE \'%' . $value . '%\'';
+              $thisWhereString .= ' NOT LIKE \'%$notcontains%\'';
               break;
            case 'between':
               // bug 2011-03-10 .. fixed date handling
               // bug 2011-03-25 date handling now on client side
-              if ($this->fieldNameMap[$fieldid]['type'] == 'date'
-                || $this->fieldNameMap[$fieldid]['type'] == 'datetime'
-                || $this->fieldNameMap[$fieldid]['type'] == 'datetimecombo')
+              if ($this->fieldNameMap[$fieldid]['type'] == 'date' || $this->fieldNameMap[$fieldid]['type'] == 'datetime' || $this->fieldNameMap[$fieldid]['type'] == 'datetimecombo')
               // $thisWhereString .= ' >= \'' . $GLOBALS['timedate']->to_db_date($value, false) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . '<=\'' . $GLOBALS['timedate']->to_db_date($valueto, false) . '\'';
-                 $thisWhereString .= ' >= \'' . '$between1' . '\' AND '.
-                    $this->get_field_name($path, $fieldname, $fieldid)
-                    .'<=\'' . '$between2' . '\'';
-              elseif ($this->fieldNameMap[$fieldid]['type'] == 'varchar'
-                || $this->fieldNameMap[$fieldid]['type'] == 'name') {
+                 $thisWhereString .= ' >= \'' . $value . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . '<=\'' . $valueto . '\'';
+              elseif ($this->fieldNameMap[$fieldid]['type'] == 'varchar' || $this->fieldNameMap[$fieldid]['type'] == 'name') {
                  //2012-11-24 change so we increae the last char by one ord numkber and change to a smaller than
                  // this is more in the logic of the user
                  $valueto = substr($valueto, 0, strlen($valueto) - 1) . chr(ord($valueto[strlen($valueto) - 1]) + 1);
@@ -2093,7 +2095,7 @@ class KReportQuery {
            case 'isnotempty':
               $thisWhereString .= ' <> \'\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' is not null';
               break;
-           case 'oneof':
+                    case 'oneof': // não usado?
               if ($this->fieldNameMap[$fieldid]['type'] == 'multienum') {
                  $valueArray = (is_array($value) ? $value : preg_split('/,/', $value));
                  $multienumWhereString = '';
@@ -2109,7 +2111,7 @@ class KReportQuery {
                  $thisWhereString .= ' IN (\'' . str_replace(',', '\',\'', (is_array($value) ? implode(',', $value) : $value)) . '\')';
               }
               break;
-           case 'oneofnot':
+                    case 'oneofnot': // não usado?
               if ($this->fieldNameMap[$fieldid]['type'] == 'multienum') {
                  $valueArray = (is_array($value) ? $value : preg_split('/,/', $value));
                  $multienumWhereString = '';
@@ -2125,7 +2127,7 @@ class KReportQuery {
                  $thisWhereString .= ' NOT IN (\'' . str_replace(',', '\',\'', (is_array($value) ? implode(',', $value) : $value)) . '\')';
               }
               break;
-           case 'oneofnotornull':
+                    case 'oneofnotornull': // não usado?
               if ($this->fieldNameMap[$fieldid]['type'] == 'multienum') {
                  $valueArray = (is_array($value) ? $value : preg_split('/,/', $value));
                  $multienumWhereString = '';
@@ -2143,15 +2145,14 @@ class KReportQuery {
               break;
            case 'today':
               //$todayDate = date('Y-m-d', mktime()); // Original
-              $todayDate = '$todayDate'; // Custom  
-              $thisWhereString .= ' >= \'' . $todayDate . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . $todayDate . ' 24:00:00\'';
+              $thisWhereString .= ' >= \'$today 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$today 24:00:00\'';
               //echo "Select inicial aux 1: ".$thisWhereString.'<br>';
               break;
            case 'past':
-              $thisWhereString .= ' <= \'' . '$past' . '\'';
+              $thisWhereString .= ' <= \'$past\'';
               break;
            case 'future':
-              $thisWhereString .= ' >= \'' . '$future' . '\'';
+              $thisWhereString .= ' >= \'$future\'';
               break;
            case 'lastndays':
               // Base para todos baseados em últimos dias
@@ -2159,134 +2160,93 @@ class KReportQuery {
               // $thisWhereString .= ' >= \'' . date('Y-m-d H:i:s', gmmktime() - $value * 86400) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . date('Y-m-d H:i:s', gmmktime()) . '\'';
                       
               // Exemplo: (axhtzzrmcpg.date_modified >= '2016-04-24 03:02:49' AND axhtzzrmcpg.date_modified < '2016-05-04 03:02:49')
-              $thisWhereString .= ' >= \'' . '( $data - INTERVAL $qtdDias DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$data' . '\'';
+              $thisWhereString .= ' >= (\'$date\' - INTERVAL $qtdDias DAY ) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               break;
            case 'lastnfdays':
               //$date = gmmktime(0, 0, 0, date('m', gmmktime()), date('d', gmmktime()), date('Y', gmmktime()));
-              $thisWhereString .= ' >= \'' . '( $data - INTERVAL $qtdDias DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$data' . '\'';
+              $thisWhereString .= ' >= (\'$date\' - INTERVAL $qtdDias DAY ) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               break;
            case 'lastnddays':
               // if numeric we still have the number of days .. else we have a date
               if (is_numeric($value)) {
                  //$date = gmmktime();
-                 $thisWhereString .= ' >= \'' . '( $data - INTERVAL $qtdDias DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$data' . '\'';
+                 $thisWhereString .= ' >= ( \'$date\' - INTERVAL $qtdDias DAY)  AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               }
               else
               // 2011-03-25 date handling no on client side
-              //$thisWhereString .= ' >= \'' . $GLOBALS['timedate']->to_db_date($value, false) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . date('Y-m-d H:i:s', gmmktime()) . '\'';
-                 $thisWhereString .= ' >= \'' . '$dataUltimosDias' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$data' . '\'';
+              $thisWhereString .= ' >= \'date\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               break;
            case 'lastnweeks':
               // (gwnxqrhtppg.date_modified >= '2016-04-20 09:24:42' AND gwnxqrhtppg.date_modified < '2016-05-04 09:24:42')
               //$date = gmmktime();
-              $thisWhereString .= ' >= \'' . 'DATE_SUB($date, INTERVAL $weeks WEEK)' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$date' . '\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL $weeks WEEK) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               break;
            case 'notlastnweeks':
               //$date = gmmktime();
-              $thisWhereString .= ' <= \'' . 'DATE_SUB($date, INTERVAL $weeks WEEK)' . '\' OR ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . '$date' . '\'';
+              $thisWhereString .= ' <= DATE_SUB(\'$date\', INTERVAL $weeks WEEK) OR ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'$date\'';
               break;
            case 'lastnfweeks':
               // N semanas anteriores a do dia atual
               //$dayofWeek = date('N');
               //$todayMidnight = gmmktime('23', '59', '59', date('n'), date('d'), date('Y'));
               //$endStamp = gmmktime('23', '59', '59', date('n'), date('d'), date('Y')) - ( date('N') * 3600 * 24);
-              $thisWhereString .= ' >= ' . 'DATE_SUB(subdate($date, INTERVAL 1 + weekday($date) DAY), INTERVAL 2 WEEK)' . ' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < '
-                   . 'subdate($data, INTERVAL 1 + weekday($data) DAY)';
+              $thisWhereString .= ' >= DATE_SUB(subdate(\'$date\', INTERVAL 1 + weekday(\'$date\') DAY), INTERVAL 2 WEEK)'
+                   .' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < '
+                   .' subdate(\'$date\', INTERVAL 1 + weekday(\'$date\') DAY)';
               break;
            case 'lastnfmonth':
-              /*
-              $endMonth = date('n'); $endYear = date('Y');
-              $endMonth = $endMonth - 1; 
-              if($endMonth == 0){
-                 $endMonth = 12;
-                 $endYear--;
-              }
-
-              $endStamp = gmmktime('23', '59', '59', $endMonth, date('t', mktime(0, 0, 0, $endMonth, 1, $endYear)), $endYear);
-
-              // get the startdate
-              $startMonth = $endMonth; $startYear = $endYear;
-              $value = $value -1;
-              if($value >= 12){
-                 $startMonth = $startMonth - ($value % 12);
-                 if($startMonth <= 0){
-                    $startMonth += 12;
-                    $startYear--;
-                 }
-                 $startYear = $startYear - (($value - ($value % 12)) / 12);
-              }
-              else
-              {
-                 $startMonth = $startMonth - $value;
-                 if($startMonth <= 0){
-                    $startMonth += 12;
-                    $startYear--;
-                 }
-              }
-              $startStamp = gmmktime('0', '0', '0', $startMonth, '1', $startYear);
-              */
-              $thisWhereString .= ' >= \'' . 'ADDDATE(LAST_DAY(SUBDATE($data, INTERVAL 1 MONTH)), 1)' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$data' . '\'';
+              $thisWhereString .= ' >= ADDDATE(LAST_DAY(SUBDATE(\'$date\', INTERVAL 1 MONTH)), 1) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               break;
            case 'thisweek':
-              // Exemplo: (czzzgmthfgp.date_modified >= '2016-05-02 00:00:00'
-              // AND czzzgmthfgp.date_modified < '2016-05-08 23:59:59')
-              
-              //$dayofWeek = date('N');               
-              // Pega a meia-noite de hoje
-              //$todayMidnight = gmmktime('23', '59', '59', date('n'), date('d'), date('Y'));
-              // Pega 1 minuto para a meia-noite
-              //$startStamp = gmmktime('00', '00', '00', date('n'), date('d'), date('Y')) - ( (date('N') - 1) * 3600 * 24);
-              
-              //$thisWhereString .= ' >= \'' . gmdate('Y-m-d H:i:s', $startStamp) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . gmdate('Y-m-d H:i:s', $startStamp + 604800 - 1) . '\'';
-              $thisWhereString .= ' >= \'' . '( $data - INTERVAL DAYOFWEEK($data) - 1 DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '( $data + INTERVAL DAYOFWEEK($data) - 1 DAY )' . '\'';
+              $thisWhereString .= ' >= (\'$date\' - INTERVAL DAYOFWEEK(\'$date\') - 1 DAY ) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < (\'$date\' + INTERVAL DAYOFWEEK(\'$date\') - 1 DAY )';
               break;
            case 'nextndays':
               //$date = gmmktime();
               // (cwhtfrhbwhy.date_modified <= '2016-05-14 03:36:18' AND cwhtfrhbwhy.date_modified > '2016-05-04 03:36:18')
-              $thisWhereString .= ' <= \'' . '( $data + INTERVAL $qtdDias DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . '$data' . '\'';
+              $thisWhereString .= ' <= (\'$date\' + INTERVAL $qtdDias DAY ) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'$date\'';
               break;
            case 'nextnddays':
               // if numeric we still have the number of days .. else we have a date
               if (is_numeric($value)) {
                  //$date = gmmktime();
-                 $thisWhereString .= ' <= \'' . '( $data + INTERVAL $qtdDias DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . '$data' . '\'';
+                 $thisWhereString .= ' <= (\'$date\' + INTERVAL $qtdDias DAY ) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'$date\'';
               } else {
                  //$conCatAdd = ' <= \'' . $GLOBALS['timedate']->to_db_date($value) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . date('Y-m-d H:i:s') . '\'';
                  // 2011-03-25 date handling now on client side
                  // $thisWhereString .= ' <= \'' . $GLOBALS['timedate']->to_db_date($value, false) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . date('Y-m-d H:i:s', gmmktime()) . '\'';
-                 $thisWhereString .= ' <= \'' . '$dataProximosDias' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . '$data' . '\'';
+                 $thisWhereString .= ' <= \'$date\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'$date\'';
               }
               break;
            //2011-05-20 added between n days option
            case 'betwndays':
               //$date = gmmktime(0, 0, 0, date('m', gmmktime()), date('d', gmmktime()), date('Y', gmmktime()));
-              $thisWhereString .= ' >= \'' . '( $data + INTERVAL $qtdDias1 DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '( $data + INTERVAL $qtdDias2 DAY )' . '\'';
+              $thisWhereString .= ' >= (\'$date\' + INTERVAL $qtdDias1 DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < (\'$date\' + INTERVAL $qtdDias2 DAY )';
               break;
            case 'betwnddays':
               if (is_numeric($value)) {
-                 //$date = gmmktime(0, 0, 0, date('m', gmmktime()), date('d', gmmktime()), date('Y', gmmktime()));
-                 $thisWhereString .= ' >= \'' . '( $data + INTERVAL $qtdDias1 DAY )' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '( $data + INTERVAL $qtdDias2 DAY )' . '\'';
+                 $date = gmmktime(0, 0, 0, date('m', gmmktime()), date('d', gmmktime()), date('Y', gmmktime()));
+                 $thisWhereString .= ' >= \'' . gmdate('Y-m-d H:i:s', $date + $value * 86400) . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . gmdate('Y-m-d H:i:s', $date + $valueto * 86400) . '\'';
               } else {
-                 $thisWhereString .= ' >= \'' . '$data1' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$data2' . '\'';
+                 $thisWhereString .= ' >= \'' . $value . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . $valueto . '\'';
               }
               break;
            case 'nextnweeks':
               //$date = gmmktime();
-              $thisWhereString .= ' <= \'' . 'DATE_SUB($date, INTERVAL $weeks WEEK)' . '\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . '$date' . '\'';
+              $thisWhereString .= ' <= DATE_SUB(\'$date\', INTERVAL $weeks WEEK) AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'$date\'';
               break;
            case 'notnextnweeks':
               //$date = gmmktime();
-              $thisWhereString .= ' >= \'' . 'DATE_SUB($date, INTERVAL $weeks WEEK)' . '\' OR ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . '$date' . '\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL $weeks WEEK) OR ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'$date\'';
               break;
            case 'firstdayofmonth':
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
-              $thisWhereString .= ' = \'ADDDATE(LAST_DAY(SUBDATE($date, INTERVAL 1 MONTH)), 1)\'';
+              $thisWhereString .= ' = ADDDATE(LAST_DAY(SUBDATE(\'$date\', INTERVAL 1 MONTH)), 1)';
               break;
            case 'firstdaynextmonth':
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] == '12' ? 1 : $dateArray['mon'] + 1, 1, $dateArray['mon'] == '12' ? $dateArray['year'] + 1 : $dateArray['year']));
-              $thisWhereString .= ' = \'ADDDATE(LAST_DAY(SUBDATE($date, INTERVAL 0 MONTH)), 1)\'';
+              $thisWhereString .= ' = ADDDATE(LAST_DAY(SUBDATE(\'$date\', INTERVAL 0 MONTH)), 1)';
               break;
            case 'nthdayofmonth':
               //$dateArray = getdate();
@@ -2297,21 +2257,20 @@ class KReportQuery {
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
               //$toDate = (($dateArray['mon'] + 1) > 12) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 11, 1, $dateArray['year'] + 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 1, 1, $dateArray['year']));
-              
-              //'( $data - INTERVAL DAYOFWEEK($data) - 1 DAY )' 
-              $thisWhereString .= ' >= \'' . 'select DATE_SUB(subdate($date, INTERVAL 1 + weekday($date) DAY), INTERVAL 1 MONTH)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'subdate($date, INTERVAL 1 + weekday($date) DAY)' . ' 00:00:00\'';
+               
+              $thisWhereString .= ' >= DATE_SUB(subdate(\'$date\', INTERVAL 1 + weekday(\'$date\') DAY), INTERVAL 1 MONTH) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < subdate(\'$date\', INTERVAL 1 + weekday(\'$date\') DAY) 00:00:00';
               break;
            case 'notthismonth':
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
               //$toDate = (($dateArray['mon'] + 1) > 12) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 11, 1, $dateArray['year'] + 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 1, 1, $dateArray['year']));
-              $thisWhereString .= ' <= \'' . 'select DATE_SUB(subdate($date, INTERVAL 1 + weekday($date) DAY), INTERVAL 1 MONTH)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > \'' . 'subdate($date, INTERVAL 1 + weekday($date) DAY)' . ' 00:00:00\'';
+              $thisWhereString .= ' <= DATE_SUB(subdate(\'$date\', INTERVAL 1 + weekday($date) DAY), INTERVAL 1 MONTH) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' > subdate($date, INTERVAL 1 + weekday($date) DAY) 00:00:00';
               break;
            case 'next3month':
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
               //$toDate = (($dateArray['mon'] + 3) > 12) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 8, 1, $dateArray['year'] + 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 3, 1, $dateArray['year']));
-              $thisWhereString .= ' >= \'' . 'DATE_SUB(curdate(), INTERVAL DAYOFMONTH(curdate())-1 DAY)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'DATE_SUB($date, INTERVAL 3 MONTH)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL DAYOFMONTH(\'$date\')-1 DAY) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < DATE_SUB(\'$date\', INTERVAL 3 MONTH) 00:00:00';
               break;
            // added mor where Opertors Bug #486
            case 'next3monthDaily':
@@ -2324,7 +2283,7 @@ class KReportQuery {
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
               //$toDate = (($dateArray['mon'] + 6) > 12) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 5, 1, $dateArray['year'] + 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 6, 1, $dateArray['year']));
-              $thisWhereString .= ' >= \'' . 'DATE_SUB(curdate(), INTERVAL DAYOFMONTH(curdate())-1 DAY)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'DATE_SUB($date, INTERVAL 6 MONTH)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL DAYOFMONTH(\'$date\')-1 DAY) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < DATE_SUB(\'$date\', INTERVAL 6 MONTH) 00:00:00';
               break;
            case 'next6monthDaily':
               $dateArray = getdate();
@@ -2342,7 +2301,7 @@ class KReportQuery {
               //$dateArray = getdate();
               //$fromDate = (($dateArray['mon'] - 6) < 1) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 6, 1, $dateArray['year'] - 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 6, 1, $dateArray['year']));
               //$toDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
-              $thisWhereString .= ' >= \'' . 'DATE_SUB($date, INTERVAL 6 MONTH)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'DATE_SUB(curdate(), INTERVAL DAYOFMONTH(curdate())-1 DAY)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL 6 MONTH) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < DATE_SUB(\'$date\', INTERVAL DAYOFMONTH(\'$date\')-1 DAY) 00:00:00';
               break;
            case 'last6monthDaily':
               $dateArray = getdate();
@@ -2355,27 +2314,27 @@ class KReportQuery {
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, 1, 1, $dateArray['year']));
               //$toDate = date('Y-m-d', mktime(0, 0, 0, 1, 1, $dateArray['year'] + 1));
-              $thisWhereString .= ' >= \'' . 'select DATE_SUB(subdate($date, INTERVAL 1 + year($date) DAY), INTERVAL 1 MONTH)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'subdate($date, INTERVAL 1 + year($date) DAY)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(subdate(\'$date\', INTERVAL 1 + year(\'$date\') DAY), INTERVAL 1 MONTH) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < subdate(\'$date\', INTERVAL 1 + year(\'$date\') DAY) 00:00:00';
               break;
            case 'lastmonth':
               //$dateArray = getdate();
               //bug 2011-08-09 removed h:i:s from format
               //$fromDate = (($dateArray['mon'] - 1) < 1) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 11, 1, $dateArray['year'] - 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 1, 1, $dateArray['year']));
               //$toDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
-              $thisWhereString .= ' >= \'' . 'DATE_SUB($date, INTERVAL 1 MONTH)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'DATE_SUB($date, INTERVAL DAYOFMONTH($date)-1 DAY)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL 1 MONTH) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < DATE_SUB(\'$date\', INTERVAL DAYOFMONTH(\'$date\')-1 DAY) 00:00:00';
               break;
            case 'last3month':
               $dateArray = getdate();
               //bug 2011-08-09 removed h:i:s from format
               //$fromDate = (($dateArray['mon'] - 3) < 1) ? date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] + 8, 1, $dateArray['year'] - 1)) : date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'] - 3, 1, $dateArray['year']));
               //$toDate = date('Y-m-d', mktime(0, 0, 0, $dateArray['mon'], 1, $dateArray['year']));
-              $thisWhereString .= ' >= \'' . 'DATE_SUB($date, INTERVAL 3 MONTH)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'DATE_SUB($date, INTERVAL DAYOFYEAR($date)-1 DAY)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL 3 MONTH) 00:00:00 AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < DATE_SUB(\'$date\', INTERVAL DAYOFYEAR(\'$date\')-1 DAY) 00:00:00';
               break;
            case 'lastyear':
               //$dateArray = getdate();
               //$fromDate = date('Y-m-d', mktime(0, 0, 0, 1, 1, $dateArray['year'] - 1));
               //$toDate = date('Y-m-d', mktime(0, 0, 0, 1, 1, $dateArray['year']));
-              $thisWhereString .= ' >= \'' . 'DATE_SUB($date, INTERVAL 1 YEAR)' . ' 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < \'' . 'DATE_SUB($date, INTERVAL DAYOFYEAR($date)-1 DAY)' . ' 00:00:00\'';
+              $thisWhereString .= ' >= DATE_SUB(\'$date\', INTERVAL 1 YEAR) 00:00:00\' AND ' . $this->get_field_name($path, $fieldname, $fieldid) . ' < DATE_SUB(\'$date\', INTERVAL DAYOFYEAR(\'$date\')-1 DAY) 00:00:00';
               break;
            case 'tyytd':
               $year = date('Y');

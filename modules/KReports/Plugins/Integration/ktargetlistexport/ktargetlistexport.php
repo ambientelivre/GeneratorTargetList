@@ -24,8 +24,7 @@ class ktargetlistexport extends kreportintegrationplugin {
 
         require_once('modules/ProspectLists/ProspectList.php');
         $newProspectList = new ProspectList();
-        $newProspectList->sql = 'teste'; // custom
-        
+
         // fill with results:
         $newProspectList->load_relationships();
 

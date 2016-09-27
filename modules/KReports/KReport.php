@@ -488,7 +488,7 @@ class KReport extends SugarBean {
       $this->kQueryArray = new KReportQueryArray($this->report_module, $this->union_modules, $evalSQLFunctions, $arrayList, $arrayUnionList, $arrayWhere, $additionalFilter, $arrayWhereGroups, $additionalGroupBy, $paramsArray);
       $sqlString = $this->kQueryArray->build_query_strings();
       $this->fieldNameMap = $this->kQueryArray->fieldNameMap;
-      echo 'QueryString: '.$sqlString;
+      //echo 'QueryString: '.$sqlString;
       
       // $_SESSION['query_aux'] com valor 1 faz o procedimento customizado
       // com substituição de variáveis
@@ -498,7 +498,7 @@ class KReport extends SugarBean {
       //$this->fieldNameMap = $this->kQueryArray->fieldNameMap;
       //Guarda o sql do relatório na Session      
       $_SESSION['kreport_sql'] = $sqlStringAux;
-      echo 'QueryStringAux: '.$sqlStringAux;
+      //echo 'QueryStringAux: '.$sqlStringAux;
       
       return $sqlString;
       // return array('select' => $this->kQueryArray->selectString, 'from' => $this->kQueryArray->fromString, 'where' => $this->kQueryArray->whereString ,'fields' => '', 'groupby' => $this->kQueryArray->groupbyString, 'having' => $this->kQueryArray->havingString , 'orderby' => $this->kQueryArray->orderbyString);
